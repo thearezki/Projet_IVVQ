@@ -3,16 +3,19 @@ def analyze_logs(filepath):
     
     count = 0
 
-    with open(filepath, 'r') as f:
-        for line in f:
-            if "ERROR" in line or "CRITICAL" in line:
-                count = count + 1
-                print(f"Alerte détectée : {line.strip()}")
+    try:
+
+        with open(filepath, 'r') as f:
+            for line in f:
+                if "ERROR" in line or "CRITICAL" in line:
+                    count = count + 1
+                    print(f"Alerte détectée : {line.strip()}")
+                    
+    except FileNotFoundError:
+        
+        print(f"ERREUR CRITIQUE : Le fichier '{filepath}' est introuvable !")
+        return 0 
 
     return count
-
 if __name__ == "__main__":
-
-    nombre_erreurs = analyze_logs("server.log")
-
-    print(f"Analyse terminée. Nombre d'erreurs trouvées : {nombre_erreurs}")
+    analyze_logs("server.log")
