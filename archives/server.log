@@ -1,0 +1,3 @@
+2024-10-01 10:00:00 [INFO] Démarrage du système
+2024-10-01 10:05:00 [ERROR] Échec connexion DB
+2024-10-01 10:10:00 [CRITICAL] Surchauffe CPU
