@@ -1,0 +1,33 @@
+---
+- name: Déploiement Automatisé de l'Auditeur
+  hosts: local  # On vise le groupe défini dans l'inventaire
+  tasks:
+
+    - name: 1. Afficher un message de début
+      debug:
+        msg: " Début du déploiement par Ansible..."
+
+    - name: 2. Créer le dossier pour les archives (Preuve qu'Ansible gère les fichiers)
+      file:
+        path: /tmp/archives_logs
+        state: directory
+        mode: '0755'
+
+    - name: 3. Arrêter l'ancien conteneur s'il tourne (Nettoyage)
+      shell: docker rm -f log-auditor
+      ignore_errors: yes  # Si le conteneur n'existe pas, continue quand même !
+
+    - name: 4. Lancer le conteneur tout neuf
+      shell: docker run -d --name log-auditor -v /tmp/archives_logs:/app/archives log-auditor
+      # Explication :
+      # -d : Détaché (tourne en fond)
+      # --name : On lui donne un nom fixe
+      # -v : On connecte le dossier qu'on a créé au point 2
+
+    - name: 5. Vérifier que ça tourne
+      shell: docker ps | grep log-auditor
+      register: resultat_docker
+
+    - name: 6. Afficher le résultat final
+      debug:
+        msg: " Succès ! Le conteneur tourne. ID: {{ resultat_docker.stdout }}"
